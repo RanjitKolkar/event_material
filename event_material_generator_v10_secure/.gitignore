@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Secrets / environment
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Application private/persistent data
+.private_data/
+*.db
+*.db-shm
+*.db-wal
+bootstrap_admin_password.txt
+app_encryption.key
+
+# Local generated files / uploads
+outputs/
+uploads/
+*.zip
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
