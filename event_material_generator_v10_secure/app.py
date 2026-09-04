@@ -13,7 +13,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from cryptography.fernet import Fernet, InvalidToken
 
-st.set_page_config(page_title="Event Material Generator", page_icon="📋", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Event Material Generator", page_icon="📋", layout="wide", initial_sidebar_state="auto")
 ROOT = Path(__file__).parent
 LETTERHEAD = ROOT / "assets_letterhead.docx"
 
@@ -22,22 +22,28 @@ st.markdown("""
 <style>
 :root{--navy:#06152d;--navy2:#0a2342;--blue:#1677b7;--purple:#5b35b5;--green:#087f5b;--bg:#eef2f6;--border:#d7e0e8;--text:#213247;--muted:#64748b}
 html,body,[class*="css"]{font-family:Arial,sans-serif}
-.stApp{background:var(--bg);color:var(--text)}
+.stApp{background:var(--bg);color:var(--text);overflow-x:hidden}
+@media (max-width: 768px){.block-container{padding:.65rem .75rem 4rem}.app-header{margin:-.65rem -.75rem .8rem;padding:10px 12px;display:block}.brand{font-size:18px}.brand-line{width:180px}.app-header>div:last-child{font-size:11px;margin-top:5px}.page-title{font-size:23px}.page-subtitle{font-size:13px}.section{padding:13px 12px;margin-bottom:12px}.section-title{font-size:18px}.card-value{font-size:18px}.stDataFrame,.stDataEditor{overflow-x:auto}.stButton>button,.stDownloadButton>button{min-height:42px;width:100%;white-space:normal}.stTextInput input,.stTextArea textarea,.stSelectbox div[data-baseweb='select']{font-size:16px!important}}
 .block-container{padding-top:1rem;padding-bottom:2rem;max-width:1500px}
 [data-testid="stSidebar"]{background:linear-gradient(180deg,var(--navy) 0%,#081d37 100%)}
-[data-testid="stSidebar"] *{color:#fff!important}
-[data-testid="stSidebar"] .stRadio label{padding:9px 10px;border-radius:6px}
-[data-testid="stSidebar"] .stRadio label:hover{background:#173553}
+[data-testid="stSidebar"]{color:#fff}
+[data-testid="stSidebar"] .stRadio label{padding:9px 12px;border-radius:9px;background:#f4f7fa!important;color:#16324d!important;margin:5px 0;font-weight:700;border:1px solid #d9e2eb}
+[data-testid="stSidebar"] .stRadio label *{color:#16324d!important}
+[data-testid="stSidebar"] .stRadio label:hover{background:#ffffff!important;border-color:#a9c2d8}
+[data-testid="stSidebar"] .stRadio [data-baseweb="radio"]{background:transparent!important}
+[data-testid="stSidebar"] .stButton>button{background:#f5f7fa!important;color:#17324d!important;border:1px solid #d8e0e8!important;font-weight:700}
+[data-testid="stSidebar"] .stButton>button:hover{background:#fff!important;color:#0b4f7a!important}
+[data-testid="stSidebar"] .step-pill{background:#173553;color:#fff!important;border:1px solid #2d4b68}
 .app-header{background:#fff;border-bottom:1px solid #dce3ea;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;margin:-1rem -1rem 1rem -1rem}
 .brand{font-weight:800;font-size:22px;color:#18293e;letter-spacing:.2px}.brand-line{height:4px;background:#e4a21b;width:440px;margin-top:4px}
 .page-title{font-size:30px;font-weight:750;color:#24364b;margin:8px 0 3px}.page-subtitle{color:var(--muted);margin-bottom:18px}
-.section{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(20,35,50,.05)}
+.stButton>button{background:#173b5f!important;color:#ffffff!important;border:1px solid #173b5f!important;font-weight:700;border-radius:7px;min-height:40px}.stButton>button:hover{background:#0f2f4d!important;color:#ffffff!important}.stDownloadButton>button{background:#ffffff!important;color:#173b5f!important;border:1px solid #b8c7d6!important;font-weight:700;min-height:40px;border-radius:7px}.stDownloadButton>button:hover{background:#eef4f8!important;color:#0f2f4d!important}.section{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(20,35,50,.05)}
 .section-title{font-size:21px;font-weight:750;color:var(--purple);border-bottom:3px solid var(--green);padding-bottom:9px;margin-bottom:16px}
 .req{color:#c82020;font-weight:800}.optional{color:#64748b;font-size:12px}
 .card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:15px;box-shadow:0 1px 3px rgba(20,35,50,.05)}
 .card-title{font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}.card-value{font-size:22px;font-weight:800;color:#1c3147;margin-top:4px;overflow-wrap:anywhere}
 .info-box{background:#edf8f4;border-left:4px solid var(--green);padding:11px 14px;border-radius:5px;color:#174e40;margin:8px 0 16px}.warning-box{background:#fff7e6;border-left:4px solid #e2a31a;padding:11px 14px;border-radius:5px;color:#6d5010}
-.small-muted{font-size:12px;color:#718096}.step-pill{display:inline-block;padding:5px 9px;border-radius:14px;background:#edf2f7;color:#334e68;font-size:11px;margin:2px}
+.small-muted{font-size:12px;color:#718096}.site-footer{text-align:center;color:#64748b;font-size:12px;padding:22px 10px 8px;margin-top:28px;border-top:1px solid #d7e0e8}.mobile-stack{display:block}.history-row{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;margin:8px 0}.history-title{font-weight:750;color:#1c3147;font-size:16px}.history-meta{color:#64748b;font-size:12px;margin-top:4px}.step-pill{display:inline-block;padding:5px 9px;border-radius:14px;background:#edf2f7;color:#334e68;font-size:11px;margin:2px}
 </style>
 """, unsafe_allow_html=True)
 
@@ -117,29 +123,85 @@ def verify_password(password, encoded):
 def init_db():
     con = db_conn()
     cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user', active INTEGER NOT NULL DEFAULT 1)")
+    cur.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE, password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user', active INTEGER NOT NULL DEFAULT 1, must_change_password INTEGER NOT NULL DEFAULT 0)")
     cur.execute("CREATE TABLE IF NOT EXISTS app_state (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
-    cur.execute("SELECT COUNT(*) AS n FROM users")
-    if cur.fetchone()["n"] == 0:
-        admin_password = _secret("ADMIN_PASSWORD")
+    cur.execute("CREATE TABLE IF NOT EXISTS event_history (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, start_date TEXT, end_date TEXT, owner_username TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, payload TEXT NOT NULL)")
+    # Safe migrations for databases created by earlier versions.
+    cols={r[1] for r in cur.execute("PRAGMA table_info(users)").fetchall()}
+    if 'email' not in cols: cur.execute("ALTER TABLE users ADD COLUMN email TEXT")
+    if 'must_change_password' not in cols: cur.execute("ALTER TABLE users ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0")
+    # Existing accounts from pre-registration versions are retained. The legacy
+    # administrator is marked for one-time secret bootstrap when needed.
+    admin_username=_secret("ADMIN_USERNAME", "admin").strip() or "admin"
+    row=cur.execute("SELECT * FROM users WHERE username=?",(admin_username,)).fetchone()
+    configured_password=_secret("ADMIN_PASSWORD")
+    configured_email=normalize_email(_secret("ADMIN_EMAIL")) if _secret("ADMIN_EMAIL") else ""
+    if not row:
         bootstrap_path = DATA_DIR / "bootstrap_admin_password.txt"
+        admin_password=configured_password
         if not admin_password:
-            # Never hard-code a production password in source control.
-            admin_password = secrets.token_urlsafe(18)
-            bootstrap_path.write_text(
-                "Initial administrator password (change immediately): " + admin_password + "\n",
-                encoding="utf-8",
-            )
-            try:
-                bootstrap_path.chmod(0o600)
-            except OSError:
-                pass
-        cur.execute(
-            "INSERT INTO users(username,password_hash,role,active) VALUES(?,?,?,1)",
-            (_secret("ADMIN_USERNAME", "admin"), hash_password(admin_password), "admin"),
-        )
-    con.commit()
-    con.close()
+            admin_password=secrets.token_urlsafe(18)
+            bootstrap_path.write_text("Initial administrator password (change immediately): "+admin_password+"\n",encoding="utf-8")
+            try: bootstrap_path.chmod(0o600)
+            except OSError: pass
+        cur.execute("INSERT INTO users(username,email,password_hash,role,active,must_change_password) VALUES(?,?,?,?,1,?)",(admin_username,configured_email or None,hash_password(admin_password),"admin",0))
+    elif row['role']=='admin' and configured_email and not row['email']:
+        cur.execute("UPDATE users SET email=? WHERE username=?",(configured_email,admin_username))
+        if configured_password and int(row['must_change_password'] or 0)==1:
+            cur.execute("UPDATE users SET password_hash=?,must_change_password=0 WHERE username=?",(hash_password(configured_password),admin_username))
+    elif row['role']=='admin' and configured_password and ('must_change_password' in cols) and int(row['must_change_password'] or 0)==1:
+        cur.execute("UPDATE users SET password_hash=?,must_change_password=0 WHERE username=?",(hash_password(configured_password),admin_username))
+    elif row['role']=='admin' and 'must_change_password' not in cols:
+        cur.execute("UPDATE users SET must_change_password=1 WHERE username=?",(admin_username,))
+        if configured_password:
+            cur.execute("UPDATE users SET password_hash=?,must_change_password=0 WHERE username=?",(hash_password(configured_password),admin_username))
+    con.commit(); con.close()
+
+def normalize_email(email):
+    return email.strip().lower()
+
+def valid_email(email):
+    """Registration/admin email must be an NFSU institutional address."""
+    import re
+    return bool(re.fullmatch(r"[^\s@]+@nfsu\.ac\.in", normalize_email(email)))
+
+def create_user(username,email,password,role='user',must_change=False):
+    username=username.strip()
+    email=normalize_email(email)
+    con=db_conn()
+    try:
+        con.execute("INSERT INTO users(username,email,password_hash,role,active,must_change_password) VALUES(?,?,?,?,1,?)",(username,email,hash_password(password),role,1 if must_change else 0))
+        con.commit()
+        return True,None
+    except sqlite3.IntegrityError as ex:
+        return False,str(ex)
+    finally: con.close()
+
+def save_event_history(event, owner_username, event_id=None):
+    payload=serialize_event_obj(event)
+    now=time.strftime('%Y-%m-%d %H:%M:%S')
+    con=db_conn()
+    if event_id:
+        con.execute("UPDATE event_history SET title=?,start_date=?,end_date=?,owner_username=?,updated_at=?,payload=? WHERE id=?",(event.get('title','Untitled Event'),str(event.get('start_date','')),str(event.get('end_date','')),owner_username,now,payload,int(event_id)))
+    else:
+        cur=con.execute("INSERT INTO event_history(title,start_date,end_date,owner_username,created_at,updated_at,payload) VALUES(?,?,?,?,?,?,?)",(event.get('title','Untitled Event'),str(event.get('start_date','')),str(event.get('end_date','')),owner_username,now,now,payload))
+        event_id=cur.lastrowid
+    con.commit(); con.close(); return int(event_id)
+
+def list_event_history(owner_username=None):
+    con=db_conn()
+    if owner_username:
+        rows=con.execute("SELECT id,title,start_date,end_date,owner_username,created_at,updated_at FROM event_history WHERE owner_username=? ORDER BY COALESCE(start_date,'') DESC,id DESC",(owner_username,)).fetchall()
+    else:
+        rows=con.execute("SELECT id,title,start_date,end_date,owner_username,created_at,updated_at FROM event_history ORDER BY COALESCE(start_date,'') DESC,id DESC").fetchall()
+    con.close(); return [dict(r) for r in rows]
+
+def get_event_history(event_id):
+    con=db_conn(); row=con.execute("SELECT * FROM event_history WHERE id=?",(int(event_id),)).fetchone(); con.close()
+    return dict(row) if row else None
+
+def delete_event_history(event_id):
+    con=db_conn(); con.execute("DELETE FROM event_history WHERE id=?",(int(event_id),)); con.commit(); con.close()
 
 
 def encrypt_text(value):
@@ -192,16 +254,26 @@ def db_set(key, value):
 
 def db_users():
     con = db_conn()
-    rows = con.execute("SELECT id,username,role,active FROM users ORDER BY username").fetchall()
+    rows = con.execute("SELECT id,username,email,role,active,must_change_password FROM users ORDER BY username").fetchall()
     con.close()
     return [dict(r) for r in rows]
 
 
 def authenticate(username, password):
     con = db_conn()
-    row = con.execute("SELECT * FROM users WHERE username=? AND active=1", (username.strip(),)).fetchone()
+    identifier=username.strip()
+    row = con.execute("SELECT * FROM users WHERE active=1 AND (username=? OR lower(COALESCE(email,''))=?)", (identifier, normalize_email(identifier))).fetchone()
     con.close()
     return dict(row) if row and verify_password(password, row["password_hash"]) else None
+
+def update_user(user_id, email, role, active):
+    con=db_conn(); con.execute("UPDATE users SET email=?,role=?,active=? WHERE id=?",(normalize_email(email) if email else None,role,1 if active else 0,int(user_id))); con.commit(); con.close()
+
+def reset_user_password(user_id, new_password):
+    con=db_conn(); con.execute("UPDATE users SET password_hash=?,must_change_password=1 WHERE id=?",(hash_password(new_password),int(user_id))); con.commit(); con.close()
+
+def change_password(username,new_password):
+    con=db_conn(); con.execute("UPDATE users SET password_hash=?,must_change_password=0 WHERE username=?",(hash_password(new_password),username)); con.commit(); con.close()
 
 # Simple per-process login throttling. Production deployments should also use a
 # reverse proxy/WAF rate limit when the app is internet-facing.
@@ -247,7 +319,9 @@ def save_current_persistent():
     if not ev:return
     ev={**ev,"schedule_df":st.session_state.get("schedule_df",pd.DataFrame()),"inauguration_df":st.session_state.get("inauguration_df",pd.DataFrame()),"experts":st.session_state.get("experts",[]),"budget":st.session_state.get("budget",[]),"checklist":st.session_state.get("checklist",{}),"chief_guest":st.session_state.get("chief_guest",{}),"coordinator_signature":st.session_state.get("coordinator_signature",""),"invitation_text":st.session_state.get("invitation_text","")}
     st.session_state.event=ev
-    db_set("current_event",serialize_event_obj(ev)); db_set("faculty",st.session_state.get("faculty",[])); db_set("faculty_master",st.session_state.get("faculty_master",[])); db_set("event_heads",st.session_state.get("event_heads",[])); db_set("leadership",st.session_state.get("leadership",{})); db_set("institution",st.session_state.get("institution",{}))
+    db_set("current_event_" + st.session_state.user.get("username",""),serialize_event_obj(ev)); db_set("faculty",st.session_state.get("faculty",[])); db_set("faculty_master",st.session_state.get("faculty_master",[])); db_set("event_heads",st.session_state.get("event_heads",[])); db_set("leadership",st.session_state.get("leadership",{})); db_set("institution",st.session_state.get("institution",{}))
+    if st.session_state.get("current_event_id") and st.session_state.get("user"):
+        save_event_history(ev, st.session_state.user.get("username"), st.session_state.current_event_id)
 
 init_db()
 
@@ -294,9 +368,21 @@ CHECKLISTS={
     "In-Event":["Registration desk operational","Attendance recorded","Chief Guest / experts received","Inauguration conducted as scheduled","Sessions conducted as per programme","Timekeeping / session coordination","Photography completed","Videography / recording completed","Refreshments / hospitality managed","Certificates / mementos distributed","Feedback collected","Important documents / photographs backed up"],
     "Post-Event":["Finalize attendance","Collect pending bills / vouchers","Record actual expenses","Process honorarium / reimbursements","Send thank-you letters","Compile photographs / videos","Prepare event report","Analyze participant feedback","Prepare media / website / social media content","Archive event documents","Submit completion documentation"]}
 
+def blank_event():
+    return {
+        "institution":{"name":"National Forensic Sciences University, Goa Campus","department":"","address":"","email":"","phone":""},
+        "programme_type":"Workshop","title":"","coordinators":[],"co_coordinators":[],"event_head":"Dean Academics",
+        "start_date":date.today(),"end_date":date.today(),"mode":"Offline","venue":"","participants":1,
+        "nature_list":[],"audience":"","infrastructure":"","organizer_expertise":"","introduction":"","justification":"","objectives":"","outcome":"",
+        "lodging":"","sponsors":"","platform":"","other_info":"","schedule_df":pd.DataFrame(columns=["Day","Time","Topic","Expert Name"]),
+        "inauguration_df":pd.DataFrame(columns=["Time","Activity","Person"]),"experts":[],"chief_guest":{"name":"","designation":"","affiliation":"","address":"","role":"Chief Guest"},
+        "budget":[],"checklist":{m:[{"task":x,"status":"Not Started","responsible":"","due":"","remarks":""} for x in items] for m,items in CHECKLISTS.items()},
+        "coordinator_signature":"","invitation_text":""
+}
+
 def init_state():
-    d=demo_event()
-    saved=db_get("current_event")
+    d=blank_event()
+    saved=db_get("current_event_" + (st.session_state.get("user",{}).get("username", "__anon__") or "__anon__"))
     if saved:
         try:d=deserialize_event_obj(saved)
         except Exception:pass
@@ -305,7 +391,7 @@ def init_state():
     faculty=[x["name"] for x in faculty_master]
     heads=db_get("event_heads") or ["Dean Academics","Campus Director","Head of Department"]
     leadership=db_get("leadership") or {"Chief Patron":"Padmashri Dr. J. M. Vyas","Chair":"Dr. Naveen Kumar Choudhary","Co-Chair":"Dr. Lokesh Chouhan"}
-    defaults={"event":d,"schedule_mode":"Day-wise","schedule_df":d.get("schedule_df",pd.DataFrame()).copy(),"inauguration_df":d.get("inauguration_df",pd.DataFrame()).copy(),"experts":d.get("experts",[]).copy(),"budget":d.get("budget",[]).copy(),"checklist":d.get("checklist",{}).copy(),"chief_guest":d.get("chief_guest",{}).copy(),"coordinator_signature":d.get("coordinator_signature",""),"invitation_text":d.get("invitation_text",""),"institution":d.get("institution",{}).copy(),"faculty":faculty,"faculty_master":faculty_master,"event_heads":heads,"leadership":leadership,"generated":None,"authenticated":False,"user":None}
+    defaults={"event":d,"schedule_mode":"Day-wise","schedule_df":d.get("schedule_df",pd.DataFrame()).copy(),"inauguration_df":d.get("inauguration_df",pd.DataFrame()).copy(),"experts":d.get("experts",[]).copy(),"budget":d.get("budget",[]).copy(),"checklist":d.get("checklist",{}).copy(),"chief_guest":d.get("chief_guest",{}).copy(),"coordinator_signature":d.get("coordinator_signature",""),"invitation_text":d.get("invitation_text",""),"institution":d.get("institution",{}).copy(),"faculty":faculty,"faculty_master":faculty_master,"event_heads":heads,"leadership":leadership,"generated":None,"authenticated":False,"user":None,"current_event_id":None}
     for k,v in defaults.items():
         if k not in st.session_state:st.session_state[k]=v
 init_state()
@@ -450,42 +536,113 @@ def save_event_to_state(ev):
 
 # ---------------- Authentication ----------------
 if not st.session_state.get("authenticated",False):
-    st.markdown("<div style='max-width:460px;margin:70px auto;background:#fff;border:1px solid #d7e0e8;border-radius:12px;padding:34px;box-shadow:0 8px 30px rgba(20,35,50,.08)'><div style='font-size:26px;font-weight:800;color:#18293e'>EVENT MATERIAL GENERATOR</div><div style='color:#64748b;margin:6px 0 24px'>Institutional Event Planning & Documentation</div>",unsafe_allow_html=True)
-    with st.form("login_form"):
-        u=st.text_input("Username",placeholder="Enter username")
-        pw=st.text_input("Password",type="password",placeholder="Enter password")
-        submitted=st.form_submit_button("Sign in",type="primary",use_container_width=True)
-    st.caption("Administrator credentials are supplied securely through deployment secrets or generated on first local run.")
-    if submitted:
-        if not login_allowed(u):
-            st.error("Too many failed attempts. Please wait a few minutes before trying again.")
-        else:
-            user=authenticate(u,pw)
-            if user:
-                clear_login_failures(u)
-                st.session_state.authenticated=True; st.session_state.user=user; save_current_persistent(); st.rerun()
+    st.markdown("<div style='max-width:460px;margin:50px auto;background:#fff;border:1px solid #d7e0e8;border-radius:12px;padding:28px;box-shadow:0 8px 30px rgba(20,35,50,.08)'><div style='font-size:25px;font-weight:800;color:#18293e'>EVENT MATERIAL GENERATOR</div><div style='color:#64748b;margin:6px 0 22px'>Institutional Event Planning & Documentation</div>",unsafe_allow_html=True)
+    login_tab, register_tab = st.tabs(["Sign in","Register"])
+    with login_tab:
+        with st.form("login_form"):
+            u=st.text_input("Username or Email",placeholder="Enter username or email")
+            pw=st.text_input("Password",type="password",placeholder="Enter password")
+            submitted=st.form_submit_button("Sign in",type="primary",use_container_width=True)
+        if submitted:
+            if not login_allowed(u):
+                st.error("Too many failed attempts. Please wait a few minutes before trying again.")
             else:
-                record_login_failure(u)
-                st.error("Invalid username or password.")
+                user=authenticate(u,pw)
+                if user:
+                    clear_login_failures(u); st.session_state.authenticated=True; st.session_state.user=user
+                    st.session_state.session_started=time.time()
+                    saved_user_event=db_get("current_event_" + user.get("username",""))
+                    if saved_user_event:
+                        try: save_event_to_state(deserialize_event_obj(saved_user_event))
+                        except Exception: pass
+                    else:
+                        save_event_to_state(blank_event())
+                    st.session_state.current_event_id=db_get("current_event_id_"+user.get("username",""))
+                    st.session_state.force_password_change=bool(user.get('must_change_password'))
+                    st.rerun()
+                else:
+                    record_login_failure(u); st.error("Invalid username/email or password.")
+    with register_tab:
+        with st.form("register_form"):
+            reml=st.text_input("Email Address")
+            run=st.text_input("Username")
+            rp1=st.text_input("Password",type="password")
+            rp2=st.text_input("Confirm Password",type="password")
+            reg=st.form_submit_button("Create Account",type="primary",use_container_width=True)
+        if reg:
+            if not valid_email(reml): st.error("Only NFSU institutional email addresses ending in @nfsu.ac.in are allowed.")
+            elif len(run.strip())<3 or len(run.strip())>40: st.error("Username must contain 3–40 characters.")
+            elif not run.replace('_','').replace('-','').isalnum(): st.error("Username may use letters, numbers, underscore and hyphen only.")
+            elif not rp1 or rp1!=rp2: st.error("Password is required and both password fields must match.")
+            else:
+                ok,err=create_user(run,reml,rp1,'user')
+                if ok: st.success("Account created. You can now sign in.")
+                elif "email" in err.lower(): st.error("That email address is already registered.")
+                else: st.error("That username is already registered.")
+    st.markdown('</div>',unsafe_allow_html=True)
+    st.markdown('<div class="site-footer"><strong>Developed by NFSU Goa Coding Club</strong><br>Coder: Dr. Ranjit Kolkar</div>',unsafe_allow_html=True)
+    st.stop()
+
+# Force first-login password change for accounts created/reset by an administrator.
+if st.session_state.get('force_password_change'):
+    st.markdown('<div class="page-title">Set Your Password</div><div class="page-subtitle">For account security, set a new password before continuing.</div>',unsafe_allow_html=True)
+    with st.form('mandatory_password_change'):
+        p1=st.text_input('New Password',type='password')
+        p2=st.text_input('Confirm New Password',type='password')
+        if st.form_submit_button('Save Password',type='primary'):
+            if not p1 or p1!=p2: st.error('Password is required and both password fields must match.')
+            else:
+                change_password(st.session_state.user['username'],p1); st.session_state.force_password_change=False; st.session_state.user['must_change_password']=0; st.success('Password updated.'); st.rerun()
+    st.markdown('<div class="site-footer"><strong>Developed by NFSU Goa Coding Club</strong><br>Coder: Dr. Ranjit Kolkar</div>',unsafe_allow_html=True)
     st.stop()
 
 # ---------------- Sidebar ----------------
 with st.sidebar:
     st.markdown('<div style="font-size:14px;font-weight:800;letter-spacing:.4px;margin-bottom:18px;">📋 EVENT MATERIAL GENERATOR</div>',unsafe_allow_html=True)
-    nav=['Event Entry','Schedule','Experts & Guests','Budget','Checklist','AI Note Studio','Generate Materials'] + (['Admin'] if st.session_state.user.get('role')=='admin' else [])
-    page=st.radio('Navigation',nav,label_visibility='collapsed')
-    st.divider(); st.markdown('**WORKFLOW**')
-    for s in ['1. Event Entry','2. Schedule','3. Experts & Guests','4. Budget','5. Checklist','6. Note Studio','7. Generate']:
-        st.markdown(f'<span class="step-pill">{s}</span>',unsafe_allow_html=True)
-    st.divider(); st.caption(f"Signed in as: {st.session_state.user.get('username')} ({st.session_state.user.get('role')})")
+    nav=['My Events','Event Entry','Schedule','Experts & Guests','Budget','Checklist','Generate Materials'] + (['Admin'] if st.session_state.user.get('role')=='admin' else [])
+    page=st.radio('Navigation',nav,index=nav.index(st.session_state.get('nav_page','My Events')) if st.session_state.get('nav_page','My Events') in nav else 0,label_visibility='collapsed'); st.session_state.nav_page=page
+    st.divider(); st.caption(f"Signed in as: {st.session_state.user.get('username')}")
     if st.button('💾 Save All Changes',use_container_width=True): save_current_persistent(); st.success('Saved to local database.')
     if st.button('Logout',use_container_width=True): st.session_state.authenticated=False; st.session_state.user=None; st.rerun()
-    st.caption('No approval-status tracking is included.')
+
 
 st.markdown('<div class="app-header"><div><div class="brand">EVENT MATERIAL GENERATOR</div><div class="brand-line"></div></div><div style="font-size:13px;color:#687789;">Institutional Event Planning & Documentation</div></div>',unsafe_allow_html=True)
 
+# ---------------- My Events ----------------
+if page=='My Events':
+    st.markdown('<div class="page-title">My Events</div><div class="page-subtitle">View saved events or start a new event.</div>',unsafe_allow_html=True)
+    hist=list_event_history(st.session_state.user.get('username'))
+    if not hist:
+        st.markdown('<div class="section"><div class="section-title">No events found</div><p>Create your first event or load the built-in sample data.</p></div>',unsafe_allow_html=True)
+        a,b=st.columns(2)
+        with a:
+            if st.button('＋ Create New Event',type='primary',use_container_width=True):
+                ev=blank_event(); save_event_to_state(ev); st.session_state.current_event_id=None; save_current_persistent(); st.session_state.nav_page='Event Entry'; st.rerun()
+        with b:
+            if st.button('Load Sample Event',use_container_width=True):
+                ev=demo_event(); save_event_to_state(ev); eid=save_event_history(ev,st.session_state.user.get('username')); st.session_state.current_event_id=eid; save_current_persistent(); st.success('Sample event loaded.'); st.rerun()
+    else:
+        if st.button('＋ Create New Event',type='primary'):
+            ev=blank_event(); save_event_to_state(ev); st.session_state.current_event_id=None; db_set('current_event_id_'+st.session_state.user.get('username',''),None); save_current_persistent(); st.session_state.nav_page='Event Entry'; st.rerun()
+        st.markdown('### Saved Events')
+        for r in hist:
+            st.markdown(f'<div class="history-row"><div class="history-title">{r["title"]}</div><div class="history-meta">{r.get("start_date","")} to {r.get("end_date","")} · Last updated {r.get("updated_at","")}</div></div>',unsafe_allow_html=True)
+            c1,c2,c3=st.columns([2,1,1])
+            with c1:
+                if st.button('Open Event',key=f'open_{r["id"]}',use_container_width=True):
+                    rec=get_event_history(r['id']); save_event_to_state(deserialize_event_obj(rec['payload'])); st.session_state.current_event_id=r['id']; db_set("current_event_id_"+st.session_state.user.get("username",""), r['id']); st.session_state.nav_page='Event Entry'; st.rerun()
+            with c2:
+                if st.button('Duplicate',key=f'dup_{r["id"]}',use_container_width=True):
+                    rec=get_event_history(r['id']); ev=deserialize_event_obj(rec['payload']); eid=save_event_history(ev,st.session_state.user.get('username')); save_event_to_state(ev); st.session_state.current_event_id=eid; db_set('current_event_id_'+st.session_state.user.get('username',''),eid); st.session_state.nav_page='Event Entry'; st.rerun()
+            with c3:
+                if st.button('Delete',key=f'del_{r["id"]}',use_container_width=True):
+                    delete_event_history(r['id']);
+                    if st.session_state.get('current_event_id')==r['id']: st.session_state.current_event_id=None; save_event_to_state(blank_event())
+                    st.rerun()
+
 # ---------------- Event Entry ----------------
 if page=='Event Entry':
+
     st.markdown('<div class="page-title">Event / Proposal Details</div><div class="page-subtitle">Enter the event once. Optional fields can be included or excluded. The saved master data drives every generated material.</div>',unsafe_allow_html=True)
     e=st.session_state.event
     st.markdown('<div class="section"><div class="section-title">1. Basic Programme Information</div>',unsafe_allow_html=True)
@@ -537,15 +694,15 @@ if page=='Event Entry':
             else:
                 st.session_state.institution.update({'name':inst_name,'department':inst_dept,'address':inst_addr})
                 ev={**e,'institution':st.session_state.institution.copy(),'programme_type':ptype,'title':title,'coordinators':coord_list,'co_coordinators':cocords,'event_head':head,'start_date':start,'end_date':end,'mode':mode,'venue':venue,'participants':participants,'nature_list':nature,'audience':audience,'infrastructure':infrastructure,'organizer_expertise':e.get('organizer_expertise',''),'introduction':introduction,'justification':justification,'objectives':objectives,'outcome':outcome,'lodging':lodging,'sponsors':sponsors,'platform':platform,'other_info':other_info,'schedule_df':st.session_state.schedule_df.copy(),'inauguration_df':st.session_state.inauguration_df.copy(),'experts':st.session_state.experts.copy(),'budget':st.session_state.budget.copy(),'checklist':st.session_state.checklist.copy(),'chief_guest':st.session_state.chief_guest.copy(),'coordinator_signature':st.session_state.coordinator_signature,'invitation_text':st.session_state.invitation_text}
-                st.session_state.event=ev; save_current_persistent(); st.success('Master event saved to local database.')
+                st.session_state.event=ev; save_current_persistent(); st.session_state.current_event_id=save_event_history(ev, st.session_state.user.get('username'), st.session_state.get('current_event_id')); db_set('current_event_id_'+st.session_state.user.get('username',''),st.session_state.current_event_id); st.session_state.nav_page='Event Entry'; st.success('Event saved successfully.')
     with c2:
-        st.download_button('⬇️ Download Demo / Current Data',serialize_event(st.session_state.event),file_name='event_data.json',mime='application/json',use_container_width=True)
+        st.download_button('⬇️ Download Current Event Data',serialize_event(st.session_state.event),file_name='event_data.json',mime='application/json',use_container_width=True)
     with c3:
         up=st.file_uploader('Upload Event JSON',type=['json'],label_visibility='collapsed')
         if up is not None:
-            try: save_event_to_state(load_event_dict(up.getvalue())); save_current_persistent(); st.success('Event data loaded and saved to local database.'); st.rerun()
+            try:
+                loaded=load_event_dict(up.getvalue()); save_event_to_state(loaded); save_current_persistent(); st.session_state.current_event_id=save_event_history(loaded, st.session_state.user.get('username')); db_set('current_event_id_'+st.session_state.user.get('username',''),st.session_state.current_event_id); st.session_state.nav_page='Event Entry'; st.success('Event data loaded and saved.'); st.rerun()
             except Exception as ex: st.error(f'Could not load JSON: {ex}')
-    st.markdown('<div class="small-muted">The application opens with the 3-day Gait Pattern Analysis demo. You can download it, edit it externally, and upload it again.</div>',unsafe_allow_html=True)
     st.markdown('</div>',unsafe_allow_html=True)
 
 # ---------------- Schedule ----------------
@@ -608,17 +765,6 @@ elif page=='Checklist':
             if module not in st.session_state.checklist:st.session_state.checklist[module]=[{'task':x,'status':'Not Started','responsible':'','due':'','remarks':''} for x in CHECKLISTS[module]]
             ed=st.data_editor(pd.DataFrame(st.session_state.checklist[module]),use_container_width=True,num_rows='dynamic',hide_index=True,key=f'check_{module}',column_config={'status':st.column_config.SelectboxColumn('Status',options=statuses,required=True)});st.session_state.checklist[module]=ed.to_dict('records'); save_current_persistent(); done=sum(x.get('status')=='Completed' for x in st.session_state.checklist[module]);total=len(st.session_state.checklist[module]);st.progress(done/total if total else 0);st.write(f'**{module}: {done}/{total} completed ({done/total*100 if total else 0:.0f}%)**');st.download_button(f'🖨️ Download {module} A4 Checklist',doc_bytes(build_checklist_doc(st.session_state.event,module)),file_name=f'{module.replace("-","_")}_Checklist.docx',mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',key=f'dl_{module}')
 
-# ---------------- AI Note Studio ----------------
-elif page=='AI Note Studio':
-    st.markdown('<div class="page-title">AI Note Studio</div><div class="page-subtitle">The application builds a predefined institutional prompt from the master event data. The result is the Note narrative used by downstream documents.</div>',unsafe_allow_html=True)
-    e=st.session_state.event; total=sum(float(x.get('amount',0) or 0) for x in st.session_state.budget)
-    prompt=f"""Draft a formal institutional Note for approval for the following programme. Use concise official language. Write Introduction, Justification, Objectives and Expected Outcome as paragraphs, followed by a final approval request paragraph. Do not invent factual details.\n\nProgramme Type: {e.get('programme_type','')}\nTitle: {e.get('title','')}\nDates: {duration_text(e['start_date'],e['end_date'])}\nMode: {e.get('mode','')}\nVenue: {e.get('venue','')}\nCoordinator(s): {', '.join(e.get('coordinators',[]))}\nTarget Audience: {e.get('audience','')}\nIntroduction: {e.get('introduction','')}\nJustification: {e.get('justification','')}\nObjectives: {e.get('objectives','')}\nExpected Outcome: {e.get('outcome','')}\nTotal Expenses Requested: Rupees {total:,.0f}/- ({amount_words(total)})"""
-    st.text_area('Predefined Prompt',prompt,height=330)
-    st.info('For this version, the deterministic institutional template is the default generator. If an AI API is configured later, this same prompt can be sent to the selected model.',icon='ℹ️')
-    st.subheader('Generated Note Preview')
-    note_doc=build_note({**e,'budget':st.session_state.budget}); st.write(e.get('introduction',''));st.write(e.get('justification',''));st.write(e.get('objectives',''));st.write(e.get('outcome',''));st.write(f"Approval is kindly sought to conduct the above-mentioned programme at {e.get('venue','')} and to allocate the necessary budget of approximately Rupees: {total:,.0f}/- ({amount_words(total)}).")
-    st.download_button('⬇️ Download Note in Word',doc_bytes(note_doc),file_name='Note_for_Approval.docx',mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-
 # ---------------- Generate ----------------
 elif page=='Generate Materials':
     st.markdown('<div class="page-title">Generate Event Materials</div><div class="page-subtitle">All material is generated from the saved master event data. Checklist documents are included in the package.</div>',unsafe_allow_html=True)
@@ -658,16 +804,41 @@ elif page=='Admin':
     st.markdown('<div class="section"><div class="section-title">User Accounts</div>',unsafe_allow_html=True)
     users=db_users(); st.dataframe(pd.DataFrame(users),use_container_width=True,hide_index=True)
     with st.form('add_user_form'):
-        x,y,z=st.columns(3)
+        x,y,z,w=st.columns(4)
         with x:nu=st.text_input('Username')
-        with y:np=st.text_input('Temporary Password',type='password')
-        with z:nr=st.selectbox('Role',['user','admin'])
-        if st.form_submit_button('＋ Create User',type='primary'):
-            if not nu.strip() or not np:st.error('Username and password are required.')
+        with y:ne=st.text_input('Email')
+        with z:np=st.text_input('Initial Password',type='password')
+        with w:nr=st.selectbox('Role',['user','admin'])
+        if st.form_submit_button('Create User',type='primary'):
+            if not nu.strip() or not valid_email(ne) or not np: st.error('Username, valid NFSU email and password are required.')
             else:
-                try:
-                    con=db_conn();con.execute('INSERT INTO users(username,password_hash,role,active) VALUES(?,?,?,1)',(nu.strip(),hash_password(np),nr));con.commit();con.close();st.success('User created.');st.rerun()
-                except sqlite3.IntegrityError:st.error('Username already exists.')
+                ok,err=create_user(nu,ne,np,nr,True)
+                if ok: st.success('User created.'); st.rerun()
+                elif 'email' in err.lower(): st.error('Email already exists.')
+                else: st.error('Username already exists.')
+    if users:
+        st.markdown('#### Manage User')
+        uid=st.selectbox('User Account',[u['id'] for u in users],format_func=lambda x: next((u['username'] for u in users if u['id']==x),str(x)))
+        selected_user=next(u for u in users if u['id']==uid)
+        a,b,c=st.columns(3)
+        with a: ue=st.text_input('Email',selected_user.get('email') or '',key='manage_email')
+        with b: ur=st.selectbox('Role',['user','admin'],index=['user','admin'].index(selected_user['role']),key='manage_role')
+        with c: ua=st.checkbox('Active',value=bool(selected_user['active']),key='manage_active')
+        q1,q2,q3=st.columns(3)
+        with q1:
+            if st.button('Save User',use_container_width=True):
+                if not valid_email(ue): st.error('Enter a valid email address.')
+                else: update_user(uid,ue,ur,ua); st.success('User updated.'); st.rerun()
+        with q2:
+            rp=st.text_input('Reset Password',type='password',key='reset_pw')
+            if st.button('Reset Password',use_container_width=True):
+                if not rp: st.error('Password is required.')
+                else: reset_user_password(uid,rp); st.success('Password reset. User will set a new password at next sign-in.'); st.rerun()
+        with q3:
+            if st.button('Delete User',use_container_width=True):
+                if selected_user['username']==st.session_state.user['username']: st.error('You cannot delete your own account.')
+                else:
+                    con=db_conn(); con.execute('DELETE FROM users WHERE id=?',(uid,)); con.commit(); con.close(); st.success('User deleted.'); st.rerun()
     st.markdown('<div class="section"><div class="section-title">Change My Password</div>',unsafe_allow_html=True)
     with st.form('change_password_form'):
         op=st.text_input('Current Password',type='password')
@@ -676,9 +847,41 @@ elif page=='Admin':
         if st.form_submit_button('Update Password'):
             con=db_conn(); row=con.execute('SELECT password_hash FROM users WHERE username=?',(st.session_state.user['username'],)).fetchone(); con.close()
             if not row or not verify_password(op,row['password_hash']): st.error('Current password is incorrect.')
-            elif len(p1)<8 or p1!=p2: st.error('New passwords must match and contain at least 8 characters.')
+            elif not p1 or p1!=p2: st.error('Password is required and both password fields must match.')
             else:
                 con=db_conn(); con.execute('UPDATE users SET password_hash=? WHERE username=?',(hash_password(p1),st.session_state.user['username'])); con.commit(); con.close(); st.success('Password updated.')
     st.markdown('</div>',unsafe_allow_html=True)
-    st.info('For deployment, configure ADMIN_USERNAME, ADMIN_PASSWORD and APP_ENCRYPTION_KEY in your secret manager. Never commit these values to Git.')
+    st.markdown('<div class="section"><div class="section-title">Event History</div>',unsafe_allow_html=True)
+    hist=list_event_history()
+    if hist:
+        hdf=pd.DataFrame(hist)
+        st.dataframe(hdf.rename(columns={'id':'ID','title':'Event','start_date':'Start Date','end_date':'End Date','owner_username':'Owner','created_at':'Created','updated_at':'Updated'}),use_container_width=True,hide_index=True)
+        st.caption('Administrators can inspect and manage the complete stored event payload for every user.')
+        ids=[int(x['id']) for x in hist]
+        selected_id=st.selectbox('Select Event Record',ids,format_func=lambda x: next((f"{r['title']} — {r['start_date']}" for r in hist if r['id']==x),str(x)))
+        selected_record=get_event_history(selected_id)
+        with st.expander('View complete selected event data'):
+            if selected_record: st.json(json.loads(selected_record['payload']))
+        r1,r2,r3,r4=st.columns(4)
+        with r1:
+            if st.button('Load Event',use_container_width=True):
+                rec=get_event_history(selected_id); ev=deserialize_event_obj(rec['payload']); save_event_to_state(ev); st.session_state.current_event_id=selected_id; db_set("current_event_id_"+st.session_state.user.get("username",""), selected_id); st.success('Event loaded.'); st.rerun()
+        with r2:
+            if st.button('Update Record',use_container_width=True):
+                save_current_persistent(); st.session_state.current_event_id=selected_id; save_event_history(st.session_state.event,st.session_state.user.get('username'),selected_id); st.success('Event history record updated.'); st.rerun()
+        with r3:
+            if st.button('Duplicate as New',use_container_width=True):
+                rec=get_event_history(selected_id); ev=deserialize_event_obj(rec['payload']); new_id=save_event_history(ev,st.session_state.user.get('username')); save_event_to_state(ev); st.session_state.current_event_id=new_id; db_set("current_event_id_"+st.session_state.user.get("username",""), new_id); st.success('Event duplicated.'); st.rerun()
+        with r4:
+            if st.button('Delete Record',use_container_width=True):
+                delete_event_history(selected_id)
+                if st.session_state.get('current_event_id')==selected_id: st.session_state.current_event_id=None
+                st.success('Event history record deleted.'); st.rerun()
+    else:
+        st.info('No historical events have been saved yet.')
+    st.markdown('</div>',unsafe_allow_html=True)
 
+
+
+
+st.markdown('<div class="site-footer"><strong>Developed by NFSU Goa Coding Club</strong><br>Coder: Dr. Ranjit Kolkar</div>',unsafe_allow_html=True)

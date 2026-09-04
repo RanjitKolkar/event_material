@@ -1,42 +1,26 @@
-# Event Material Generator v10
+# Event Material Generator v14
 
-Streamlit application for institutional event planning, persistent master data, authentication and document generation.
+NFSU Goa institutional event planning, event history, checklist, budget and document generation application.
 
-## Secure authentication
-- Default administrator username is `admin` unless `ADMIN_USERNAME` is configured.
-- **No production password is hard-coded in the repository.** Set `ADMIN_PASSWORD` in Streamlit Secrets/environment variables.
-- If no password is configured on a fresh local installation, a random bootstrap password is generated in the ignored `.private_data/bootstrap_admin_password.txt`.
-- Passwords are stored as salted PBKDF2-SHA256 hashes.
-- Repeated failed logins are throttled.
+## Access
+- Users register with an `@nfsu.ac.in` email address.
+- Passwords may be any non-empty value and are stored as salted PBKDF2 hashes.
+- Users can view and manage their own saved event history.
+- Administrators can manage users, institutional master data and all event records.
 
-## Persistent and encrypted data
-Runtime application state is stored outside the source tree in `EVENT_DATA_DIR` (default `.private_data/`). Application state is encrypted using a Fernet key before being written to SQLite. For production, set `APP_ENCRYPTION_KEY` in the platform secret manager.
+## Event workflow
+1. Sign in.
+2. View saved events, or create a new event / load the sample event when no event exists.
+3. Enter and save the event master record.
+4. Maintain schedule, experts/guests, budget and checklist.
+5. Generate the complete Word document package.
 
-The repository `.gitignore` excludes databases, keys, secrets, environment files and generated/private data. See `SECURITY.md` for deployment requirements.
+## Persistence
+Application state, users and event history are stored in the configured persistent data directory. For Streamlit Cloud production use, provide persistent storage or a managed database rather than relying on ephemeral local storage.
 
-## Preloaded leadership
-- Chief Patron: Padmashri Dr. J. M. Vyas
-- Chair: Dr. Naveen Kumar Choudhary
-- Co-Chair: Dr. Lokesh Chouhan
+## Secrets
+Configure `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` and `APP_ENCRYPTION_KEY` through the deployment secret manager. Never commit secrets to GitHub.
 
-## Features
-- Authentication with admin/user roles
-- Persistent SQLite storage
-- Preloaded NFSU Goa faculty master with designations
-- Event heads and leadership master data
-- Download/upload event JSON
-- Spreadsheet-style schedule with custom columns and rows
-- Budget and automatic approval amount
-- AI Note Studio / deterministic institutional Note
-- Official workshop/e-workshop proposal
-- Chief Guest invitation and inauguration programme
-- Pre-Event, In-Event and Post-Event A4 checklists
-- Complete event material ZIP
-- NFSU Goa letterhead bundled
-- 3-day Gait Pattern Analysis demo data as the default event when no event has yet been saved
-
-## Run
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
+## Footer
+Developed by NFSU Goa Coding Club  
+Coder: Dr. Ranjit Kolkar

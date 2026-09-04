@@ -1,6 +1,6 @@
 # Security and deployment guide
 
-This application is designed so that the Git repository contains **code and non-sensitive demo/template assets only**. Runtime event data, database files, encryption keys and credentials must never be committed.
+This application is designed so that the Git repository contains **code and non-sensitive template assets and starter data only**. Runtime event data, database files, encryption keys and credentials must never be committed.
 
 ## Secrets
 
@@ -45,7 +45,7 @@ Do not commit:
 - real participant/personal data
 - confidential event documents
 
-The bundled Gait Pattern Analysis event is demo data and should remain non-confidential.
+The bundled Gait Pattern Analysis starter event contains no confidential credentials and should be replaced with institutional data before operational use if required.
 
 ## Production recommendations
 
