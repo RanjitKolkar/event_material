@@ -382,7 +382,9 @@ def blank_event():
 
 def init_state():
     d=blank_event()
-    saved=db_get("current_event_" + (st.session_state.get("user",{}).get("username", "__anon__") or "__anon__"))
+    user_obj=st.session_state.get("user") or {}
+    username=user_obj.get("username") or "__anon__"
+    saved=db_get("current_event_" + username)
     if saved:
         try:d=deserialize_event_obj(saved)
         except Exception:pass

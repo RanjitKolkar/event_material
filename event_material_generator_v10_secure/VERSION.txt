@@ -1,2 +1,1 @@
-Event Material Generator v14
-Deployment-ready build
+Event Material Generator v15 - Admin credentials updated

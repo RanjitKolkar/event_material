@@ -1,15 +1,8 @@
-Streamlit Community Cloud deployment
+Streamlit Cloud Secrets
 
-1. Push ONLY source/template/starter files to the public repository.
-2. Do NOT commit the SQLite database, .private_data directory, .env, secrets.toml, passwords or API keys.
-3. Deploy app.py.
-4. In App Settings -> Secrets, configure:
+Add the following to App -> Settings -> Secrets:
 
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "<strong unique password>"
-APP_ENCRYPTION_KEY = "<generated Fernet key>"
-
-5. If long-term persistence is required, use a managed database/object storage instead of relying on the app container filesystem.
-
-
-Version 11 also supports user self-registration and administrator-only event-history CRUD. For production durability across redeployments, use a persistent storage layer or managed database rather than relying on ephemeral local SQLite storage.
+ADMIN_USERNAME = "ranjit.kolkar@nfsu.ac.in"
+ADMIN_PASSWORD = "Admin@2021"
+ADMIN_EMAIL = "ranjit.kolkar@nfsu.ac.in"
+APP_ENCRYPTION_KEY = "EGtWTWFwWi0KumKQz6FJNuijneWJLP1n8HU9sZQ-PQE="
