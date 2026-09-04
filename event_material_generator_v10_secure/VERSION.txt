@@ -1,1 +1,1 @@
-Event Material Generator v15 - Admin credentials updated
+Event Material Generator v17 - UI contrast and initialization fix

@@ -27,17 +27,19 @@ html,body,[class*="css"]{font-family:Arial,sans-serif}
 .block-container{padding-top:1rem;padding-bottom:2rem;max-width:1500px}
 [data-testid="stSidebar"]{background:linear-gradient(180deg,var(--navy) 0%,#081d37 100%)}
 [data-testid="stSidebar"]{color:#fff}
-[data-testid="stSidebar"] .stRadio label{padding:9px 12px;border-radius:9px;background:#f4f7fa!important;color:#16324d!important;margin:5px 0;font-weight:700;border:1px solid #d9e2eb}
-[data-testid="stSidebar"] .stRadio label *{color:#16324d!important}
-[data-testid="stSidebar"] .stRadio label:hover{background:#ffffff!important;border-color:#a9c2d8}
+[data-testid="stSidebar"] .stRadio label{padding:9px 12px!important;border-radius:8px!important;background:#ffffff!important;color:#17324d!important;margin:4px 0!important;font-weight:700!important;border:1px solid #c9d5e1!important;cursor:pointer!important;transition:background-color .12s ease,border-color .12s ease}
+[data-testid="stSidebar"] .stRadio label *{color:#17324d!important}
+[data-testid="stSidebar"] .stRadio label:hover{background:#eef5fb!important;border-color:#8eabc4!important}
+[data-testid="stSidebar"] .stRadio label:active{background:#e1edf7!important}
 [data-testid="stSidebar"] .stRadio [data-baseweb="radio"]{background:transparent!important}
-[data-testid="stSidebar"] .stButton>button{background:#f5f7fa!important;color:#17324d!important;border:1px solid #d8e0e8!important;font-weight:700}
-[data-testid="stSidebar"] .stButton>button:hover{background:#fff!important;color:#0b4f7a!important}
+[data-testid="stSidebar"] .stButton>button{background:#ffffff!important;color:#17324d!important;border:1px solid #c9d5e1!important;font-weight:700!important;transition:background-color .12s ease,border-color .12s ease,transform .05s ease!important}
+[data-testid="stSidebar"] .stButton>button:hover{background:#eef5fb!important;color:#0b4f7a!important;border-color:#8eabc4!important}
+[data-testid="stSidebar"] .stButton>button:active{background:#e1edf7!important;transform:translateY(1px)!important}
 [data-testid="stSidebar"] .step-pill{background:#173553;color:#fff!important;border:1px solid #2d4b68}
 .app-header{background:#fff;border-bottom:1px solid #dce3ea;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;margin:-1rem -1rem 1rem -1rem}
 .brand{font-weight:800;font-size:22px;color:#18293e;letter-spacing:.2px}.brand-line{height:4px;background:#e4a21b;width:440px;margin-top:4px}
 .page-title{font-size:30px;font-weight:750;color:#24364b;margin:8px 0 3px}.page-subtitle{color:var(--muted);margin-bottom:18px}
-.stButton>button{background:#173b5f!important;color:#ffffff!important;border:1px solid #173b5f!important;font-weight:700;border-radius:7px;min-height:40px}.stButton>button:hover{background:#0f2f4d!important;color:#ffffff!important}.stDownloadButton>button{background:#ffffff!important;color:#173b5f!important;border:1px solid #b8c7d6!important;font-weight:700;min-height:40px;border-radius:7px}.stDownloadButton>button:hover{background:#eef4f8!important;color:#0f2f4d!important}.section{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(20,35,50,.05)}
+.stButton>button{background:#1769aa!important;color:#ffffff!important;border:1px solid #1769aa!important;font-weight:700!important;border-radius:7px!important;min-height:40px!important;box-shadow:none!important;transition:background-color .12s ease,border-color .12s ease,transform .05s ease!important}.stButton>button:hover{background:#12598f!important;color:#ffffff!important;border-color:#12598f!important}.stButton>button:active{background:#0e4b78!important;color:#ffffff!important;transform:translateY(1px)!important}.stDownloadButton>button{background:#ffffff!important;color:#173b5f!important;border:1px solid #aebfd0!important;font-weight:700!important;min-height:40px!important;border-radius:7px!important;transition:background-color .12s ease,border-color .12s ease,transform .05s ease!important}.stDownloadButton>button:hover{background:#eef4f8!important;color:#0f2f4d!important;border-color:#7896af!important}.stDownloadButton>button:active{background:#e2edf5!important;transform:translateY(1px)!important}.section{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(20,35,50,.05)}
 .section-title{font-size:21px;font-weight:750;color:var(--purple);border-bottom:3px solid var(--green);padding-bottom:9px;margin-bottom:16px}
 .req{color:#c82020;font-weight:800}.optional{color:#64748b;font-size:12px}
 .card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:15px;box-shadow:0 1px 3px rgba(20,35,50,.05)}
