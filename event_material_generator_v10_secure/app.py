@@ -366,9 +366,81 @@ def demo_event():
     }
 
 CHECKLISTS={
-    "Pre-Event":["Finalize event title, date and venue","Confirm coordinator / co-coordinator","Prepare official proposal","Prepare Note for Approval","Finalize budget estimate","Identify experts / speakers","Send expert invitations","Confirm Chief Guest / special guests","Finalize course content and schedule","Prepare inauguration programme","Prepare participant invitation / circular","Create registration form / link","Prepare poster / banner","Arrange venue and seating","Arrange audio-visual equipment","Arrange refreshments / hospitality","Arrange accommodation / transport if required","Prepare attendance sheet","Prepare certificates / mementos","Brief volunteers and event team"],
-    "In-Event":["Registration desk operational","Attendance recorded","Chief Guest / experts received","Inauguration conducted as scheduled","Sessions conducted as per programme","Timekeeping / session coordination","Photography completed","Videography / recording completed","Refreshments / hospitality managed","Certificates / mementos distributed","Feedback collected","Important documents / photographs backed up"],
-    "Post-Event":["Finalize attendance","Collect pending bills / vouchers","Record actual expenses","Process honorarium / reimbursements","Send thank-you letters","Compile photographs / videos","Prepare event report","Analyze participant feedback","Prepare media / website / social media content","Archive event documents","Submit completion documentation"]}
+    "Pre-Event": [
+        "Planning: confirm event title, dates, venue, mode and participant capacity",
+        "Planning: confirm coordinator, co-coordinator and event head",
+        "Planning: finalize proposal, Note for Approval and event master record",
+        "Planning: finalize objectives, target audience and programme outcomes",
+        "Academic: finalize day-wise schedule, session topics and timings",
+        "Academic: confirm experts/resource persons and obtain profiles/bios",
+        "Academic: confirm Chief Guest and special guests",
+        "Academic: prepare inauguration programme and session flow",
+        "Communication: prepare invitations, circulars and participant communication",
+        "Communication: prepare poster, social-media artwork and website information",
+        "Registration: create registration form/link and participant database",
+        "Registration: prepare registration desk, badges, attendance and feedback forms",
+        "Venue: inspect hall, seating, stage, podium and audience layout",
+        "Venue: prepare stage backdrop/banner with correct event details",
+        "Venue: prepare name plates/table displays for dignitaries and speakers",
+        "Venue: arrange lectern/podium, tables, chairs, dais and reserved seating",
+        "Technical: test microphones, speakers, mixer and audio recording",
+        "Technical: test projector/display, laptop, presentation clicker and cables",
+        "Technical: verify internet/Wi-Fi and online platform if applicable",
+        "Technical: arrange power supply, extension boards and backup power",
+        "Inauguration: arrange ceremonial lamp/diya, lighter/matches and lamp table",
+        "Inauguration: arrange bouquets, mementos and guest reception materials",
+        "Hospitality: arrange drinking water for dais, speakers and participants",
+        "Hospitality: confirm tea/refreshments/lunch and service timing",
+        "Hospitality: confirm accommodation and transport where required",
+        "Logistics: prepare stationery, folders, notepads, pens and participant kits",
+        "Certificates: confirm certificate format, participant data and printing plan",
+        "Media: nominate photographer/videographer and prepare media-note inputs",
+        "Media: prepare press/media contact list and approved event highlights",
+        "Team: brief volunteers, registration team, protocol team and technical team",
+        "Contingency: keep emergency contacts, first-aid and backup arrangements ready",
+    ],
+    "In-Event": [
+        "Registration: open registration/help desk and verify participant entries",
+        "Registration: record attendance and issue badges/material kits",
+        "Protocol: receive Chief Guest, dignitaries and experts",
+        "Protocol: verify name plates, seating and dais arrangement before arrival",
+        "Inauguration: display approved inauguration schedule and follow sequence",
+        "Inauguration: confirm stage banner/backdrop and event branding",
+        "Inauguration: ensure microphones, podium and lighting are ready",
+        "Inauguration: arrange ceremonial lamp/diya and lighting ceremony materials",
+        "Inauguration: arrange bouquets/mementos and presentation order",
+        "Inauguration: keep drinking water available on dais",
+        "Technical: perform live audio/video/projector checks before each session",
+        "Technical: manage presentations, screen sharing, internet and recording",
+        "Programme: conduct sessions according to approved schedule",
+        "Programme: maintain timekeeping and coordinate speaker transitions",
+        "Programme: record session changes, substitutions and important announcements",
+        "Hospitality: manage refreshments, lunch, water and guest requirements",
+        "Media: photograph inauguration, speakers, sessions, group photographs and activities",
+        "Media: record video where applicable and capture key event highlights",
+        "Media: collect speaker/guest details and approved quotes/highlights for media note",
+        "Certificates: verify completion/attendance eligibility before distribution",
+        "Feedback: collect participant feedback and resolve immediate issues",
+        "Records: securely back up attendance, photographs, presentations and important documents",
+    ],
+    "Post-Event": [
+        "Records: finalize attendance and participant database",
+        "Records: collect missing presentations, photographs, videos and session records",
+        "Finance: collect bills, vouchers, invoices and supporting documents",
+        "Finance: record actual expenditure against approved/requested budget",
+        "Finance: process honorarium, reimbursements and vendor payments as applicable",
+        "Certificates: finalize certificates and complete pending distribution/delivery",
+        "Communication: send thank-you letters/messages to Chief Guest, experts and contributors",
+        "Media: finalize media note, website/news copy and social-media highlights",
+        "Media: select, label and archive photographs and video files",
+        "Feedback: analyze participant feedback and record key suggestions",
+        "Reporting: prepare event report with objectives, schedule, participation and outcomes",
+        "Reporting: document key achievements, photographs and notable outcomes",
+        "Archive: compile proposal, Note, schedule, invitations, attendance, certificates and report",
+        "Archive: store final event package and backups in the designated institutional location",
+        "Closure: record pending actions and responsible persons until completion",
+    ]
+}
 
 def blank_event():
     return {
@@ -382,6 +454,22 @@ def blank_event():
         "coordinator_signature":"","invitation_text":""
 }
 
+def normalize_checklist(saved):
+    """Merge the current detailed checklist template into saved events without losing existing progress."""
+    saved = saved or {}
+    out = {}
+    for module, tasks in CHECKLISTS.items():
+        old = saved.get(module, []) or []
+        by_task = {str(x.get('task','')).strip(): x for x in old if isinstance(x, dict)}
+        rows = []
+        for task in tasks:
+            rows.append(by_task.get(task, {'task': task, 'status':'Not Started', 'responsible':'', 'due':'', 'remarks':''}))
+        # Preserve any user-added custom checklist rows after the standard items.
+        standard = set(tasks)
+        rows.extend(x for x in old if str(x.get('task','')).strip() and str(x.get('task','')).strip() not in standard)
+        out[module] = rows
+    return out
+
 def init_state():
     d=blank_event()
     user_obj=st.session_state.get("user") or {}
@@ -390,6 +478,7 @@ def init_state():
     if saved:
         try:d=deserialize_event_obj(saved)
         except Exception:pass
+    d['checklist'] = normalize_checklist(d.get('checklist', {}))
     faculty_master=db_get("faculty_master") or [
         {"name":"Prof. (Dr.) Naveen Kumar Chaudhary","designation":"Professor"},{"name":"Dr. Narayan Pandurang Waghmare","designation":"Professor"},{"name":"Dr. Lokesh Chouhan","designation":"Associate Professor"},{"name":"Dr. Raj Kumar Jaiswal","designation":"Assistant Professor"},{"name":"Dr. Panem Charanarur","designation":"Assistant Professor"},{"name":"Dr. Jerin Mohan N D","designation":"Assistant Professor"},{"name":"Dr. Sneha Sagar","designation":"Assistant Professor"},{"name":"Dr. Suryakant A. Patil","designation":"Assistant Professor"},{"name":"Dr. Mrinmayee Kale","designation":"Assistant Professor"},{"name":"Dr. Sweta Nidhi","designation":"Assistant Professor"},{"name":"Dr. Rakhee Lohia","designation":"Assistant Professor"},{"name":"Dr. Ranjit Kolkar","designation":"Assistant Professor"},{"name":"Dr. T.K. Gundoor","designation":"Assistant Professor"},{"name":"Dr. Inder Bhan Singh","designation":"Assistant Professor"},{"name":"Dr. Manpreet Kaur","designation":"Assistant Professor"},{"name":"Dr. Jovi Jose Salvador D'silva","designation":"Assistant Professor"},{"name":"Dr. Pranitha Sanda","designation":"Assistant Professor"},{"name":"Dr. Seema Malhotra","designation":"Assistant Professor"},{"name":"Dr. Sujit Mahato","designation":"Assistant Professor"},{"name":"Dr. Sanay Naha","designation":"Assistant Professor"},{"name":"Mr. Dova Nani","designation":"Lecturer"},{"name":"Mr. Harsh Panchal","designation":"Lecturer"},{"name":"Mr. Rajesh Kumar Mitra","designation":"Lecturer"},{"name":"Mr. Rahul Kamble","designation":"Lecturer"},{"name":"Ms. Anouska Dutta","designation":"Lecturer"},{"name":"Mr. Abhinav Salgunan","designation":"Lecturer"}]
     faculty=[x["name"] for x in faculty_master]
@@ -491,8 +580,33 @@ def build_invitation(event):
     return doc
 
 def build_checklist_doc(event,module):
-    doc=new_doc(); add_para(doc,f'{module} Checklist',bold=True,center=True,size=14,space_after=8); add_para(doc,f"Event: {event.get('title','Event')}",center=True,space_after=4); add_para(doc,f"Date: {duration_text(event['start_date'],event['end_date'])}",center=True,space_after=12)
-    items=event.get('checklist',{}).get(module,[]); df=pd.DataFrame([{'✓':'☐','Task':x.get('task',''),'Status':x.get('status','Not Started'),'Responsible':x.get('responsible',''),'Due Date':x.get('due',''),'Remarks':x.get('remarks','')} for x in items]); build_table(doc,df,8.5); return doc
+    doc=new_doc(); add_para(doc,f'{module} Checklist',bold=True,center=True,size=14,space_after=6); add_para(doc,f"Event: {event.get('title','Event')}",center=True,space_after=3); add_para(doc,f"Date: {duration_text(event['start_date'],event['end_date'])}",center=True,space_after=8)
+    items=event.get('checklist',{}).get(module,[])
+    df=pd.DataFrame([{'✓':'☐','Task':x.get('task',''),'Status':x.get('status','Not Started'),'Responsible':x.get('responsible',''),'Due Date':x.get('due',''),'Remarks':x.get('remarks','')} for x in items])
+    build_table(doc,df,8); return doc
+
+def build_full_checklist_doc(event):
+    """Compact institutional master checklist designed to fit on exactly two A4 pages."""
+    doc=new_doc()
+    sec=doc.sections[0]
+    sec.top_margin=Cm(1.35); sec.bottom_margin=Cm(1.25); sec.left_margin=Cm(1.35); sec.right_margin=Cm(1.35)
+    all_rows=[]
+    for module, items in CHECKLISTS.items():
+        for i, task in enumerate(items, 1):
+            all_rows.append((module, task))
+    # Compact two-page layout: split at a clean module boundary.
+    split = len(CHECKLISTS['Pre-Event']) + len(CHECKLISTS['In-Event'])
+    for page_no, rows in enumerate((all_rows[:split], all_rows[split:]), 1):
+        if page_no > 1: doc.add_page_break()
+        add_para(doc,'EVENT MASTER CHECKLIST',bold=True,center=True,size=12,space_after=2)
+        add_para(doc,event.get('title','Event'),bold=True,center=True,size=9,space_after=1)
+        add_para(doc,duration_text(event['start_date'],event['end_date']),center=True,size=8,space_after=5)
+        data=[]
+        for n,(module,task) in enumerate(rows,1):
+            data.append({'✓':'☐','Phase':module,'Detailed checklist item':task,'Status':''})
+        build_table(doc,pd.DataFrame(data),7)
+        add_para(doc,f'Page {page_no} of 2',center=True,size=7,space_after=0)
+    return doc
 
 def build_inauguration(event):
     doc=new_doc(); add_para(doc,'Inauguration Programme',bold=True,center=True,size=14,space_after=8); add_para(doc,event.get('title',''),center=True,space_after=4); add_para(doc,duration_text(event['start_date'],event['end_date']),center=True,space_after=12); build_table(doc,event.get('inauguration_df'),9); return doc
@@ -506,9 +620,10 @@ def build_package(event):
         '03_Programme_Schedule.docx':doc_bytes(build_schedule_doc(event)),
         '04_Chief_Guest_Invitation.docx':doc_bytes(build_invitation(event)),
         '05_Inauguration_Programme.docx':doc_bytes(build_inauguration(event)),
-        '06_Checklist_Pre_Event.docx':doc_bytes(build_checklist_doc(event,'Pre-Event')),
-        '07_Checklist_In-Event.docx':doc_bytes(build_checklist_doc(event,'In-Event')),
-        '08_Checklist_Post_Event.docx':doc_bytes(build_checklist_doc(event,'Post-Event')),
+        '06_Event_Master_Checklist_2_Pages.docx':doc_bytes(build_full_checklist_doc(event)),
+        '07_Checklist_Pre_Event.docx':doc_bytes(build_checklist_doc(event,'Pre-Event')),
+        '08_Checklist_In-Event.docx':doc_bytes(build_checklist_doc(event,'In-Event')),
+        '09_Checklist_Post_Event.docx':doc_bytes(build_checklist_doc(event,'Post-Event')),
     }
     with BytesIO() as m:
         with ZipFile(m,'w',ZIP_DEFLATED) as z:
@@ -762,7 +877,8 @@ elif page=='Budget':
 
 # ---------------- Checklist ----------------
 elif page=='Checklist':
-    st.markdown('<div class="page-title">Event Checklist</div><div class="page-subtitle">Module-wise checklist for Pre-Event, In-Event and Post-Event. Each module is printable on A4 Word format.</div>',unsafe_allow_html=True)
+    st.markdown('<div class="page-title">Event Checklist</div><div class="page-subtitle">A detailed, operational checklist covering planning, venue, technical, inauguration, hospitality, media, programme delivery, finance, reporting and archiving.</div>',unsafe_allow_html=True)
+    st.download_button('🖨️ Download Complete 2-Page Master Checklist',doc_bytes(build_full_checklist_doc(st.session_state.event)),file_name='Event_Master_Checklist_2_Pages.docx',mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',use_container_width=True,key='dl_master_checklist')
     tabs=st.tabs(list(CHECKLISTS.keys())); statuses=['Not Started','In Progress','Completed','Delayed','Not Applicable']
     for tab,module in zip(tabs,CHECKLISTS):
         with tab:
